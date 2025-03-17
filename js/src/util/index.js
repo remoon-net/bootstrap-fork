@@ -217,7 +217,12 @@ const onDOMContentLoaded = (callback) => {
   }
 }
 
-const isRTL = () => document.documentElement.dir === "rtl"
+const isRTL = () => {
+  if (!BROWSER) {
+    return false
+  }
+  return document.documentElement.dir === "rtl"
+}
 
 import { BROWSER } from "esm-env"
 
