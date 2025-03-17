@@ -5,26 +5,24 @@
  * --------------------------------------------------------------------------
  */
 
-import BaseComponent from './base-component.js'
-import EventHandler from './dom/event-handler.js'
-import SelectorEngine from './dom/selector-engine.js'
-import Backdrop from './util/backdrop.js'
-import { enableDismissTrigger } from './util/component-functions.js'
-import FocusTrap from './util/focustrap.js'
-import {
-  defineJQueryPlugin, isRTL, isVisible, reflow
-} from './util/index.js'
-import ScrollBarHelper from './util/scrollbar.js'
+import BaseComponent from "./base-component.js"
+import EventHandler from "./dom/event-handler.js"
+import SelectorEngine from "./dom/selector-engine.js"
+import Backdrop from "./util/backdrop.js"
+import { enableDismissTrigger } from "./util/component-functions.js"
+import FocusTrap from "./util/focustrap.js"
+import { defineJQueryPlugin, isRTL, isVisible, reflow } from "./util/index.js"
+import ScrollBarHelper from "./util/scrollbar.js"
 
 /**
  * Constants
  */
 
-const NAME = 'modal'
-const DATA_KEY = 'bs.modal'
+const NAME = "modal"
+const DATA_KEY = "bs.modal"
 const EVENT_KEY = `.${DATA_KEY}`
-const DATA_API_KEY = '.data-api'
-const ESCAPE_KEY = 'Escape'
+const DATA_API_KEY = ".data-api"
+const ESCAPE_KEY = "Escape"
 
 const EVENT_HIDE = `hide${EVENT_KEY}`
 const EVENT_HIDE_PREVENTED = `hidePrevented${EVENT_KEY}`
@@ -37,26 +35,26 @@ const EVENT_MOUSEDOWN_DISMISS = `mousedown.dismiss${EVENT_KEY}`
 const EVENT_KEYDOWN_DISMISS = `keydown.dismiss${EVENT_KEY}`
 const EVENT_CLICK_DATA_API = `click${EVENT_KEY}${DATA_API_KEY}`
 
-const CLASS_NAME_OPEN = 'modal-open'
-const CLASS_NAME_FADE = 'fade'
-const CLASS_NAME_SHOW = 'show'
-const CLASS_NAME_STATIC = 'modal-static'
+const CLASS_NAME_OPEN = "modal-open"
+const CLASS_NAME_FADE = "fade"
+const CLASS_NAME_SHOW = "show"
+const CLASS_NAME_STATIC = "modal-static"
 
-const OPEN_SELECTOR = '.modal.show'
-const SELECTOR_DIALOG = '.modal-dialog'
-const SELECTOR_MODAL_BODY = '.modal-body'
+const OPEN_SELECTOR = ".modal.show"
+const SELECTOR_DIALOG = ".modal-dialog"
+const SELECTOR_MODAL_BODY = ".modal-body"
 const SELECTOR_DATA_TOGGLE = '[data-bs-toggle="modal"]'
 
 const Default = {
   backdrop: true,
   focus: true,
-  keyboard: true
+  keyboard: true,
 }
 
 const DefaultType = {
-  backdrop: '(boolean|string)',
-  focus: 'boolean',
-  keyboard: 'boolean'
+  backdrop: "(boolean|string)",
+  focus: "boolean",
+  keyboard: "boolean",
 }
 
 /**
@@ -101,7 +99,7 @@ class Modal extends BaseComponent {
     }
 
     const showEvent = EventHandler.trigger(this._element, EVENT_SHOW, {
-      relatedTarget
+      relatedTarget,
     })
 
     if (showEvent.defaultPrevented) {
@@ -137,7 +135,11 @@ class Modal extends BaseComponent {
 
     this._element.classList.remove(CLASS_NAME_SHOW)
 
-    this._queueCallback(() => this._hideModal(), this._element, this._isAnimated())
+    this._queueCallback(
+      () => this._hideModal(),
+      this._element,
+      this._isAnimated()
+    )
   }
 
   dispose() {
@@ -158,13 +160,13 @@ class Modal extends BaseComponent {
   _initializeBackDrop() {
     return new Backdrop({
       isVisible: Boolean(this._config.backdrop), // 'static' option will be translated to true, and booleans will keep their value,
-      isAnimated: this._isAnimated()
+      isAnimated: this._isAnimated(),
     })
   }
 
   _initializeFocusTrap() {
     return new FocusTrap({
-      trapElement: this._element
+      trapElement: this._element,
     })
   }
 
@@ -174,10 +176,10 @@ class Modal extends BaseComponent {
       document.body.append(this._element)
     }
 
-    this._element.style.display = 'block'
-    this._element.removeAttribute('aria-hidden')
-    this._element.setAttribute('aria-modal', true)
-    this._element.setAttribute('role', 'dialog')
+    this._element.style.display = "block"
+    this._element.removeAttribute("aria-hidden")
+    this._element.setAttribute("aria-modal", true)
+    this._element.setAttribute("role", "dialog")
     this._element.scrollTop = 0
 
     const modalBody = SelectorEngine.findOne(SELECTOR_MODAL_BODY, this._dialog)
@@ -196,7 +198,7 @@ class Modal extends BaseComponent {
 
       this._isTransitioning = false
       EventHandler.trigger(this._element, EVENT_SHOWN, {
-        relatedTarget
+        relatedTarget,
       })
     }
 
@@ -204,7 +206,7 @@ class Modal extends BaseComponent {
   }
 
   _addEventListeners() {
-    EventHandler.on(this._element, EVENT_KEYDOWN_DISMISS, event => {
+    EventHandler.on(this._element, EVENT_KEYDOWN_DISMISS, (event) => {
       if (event.key !== ESCAPE_KEY) {
         return
       }
@@ -223,14 +225,14 @@ class Modal extends BaseComponent {
       }
     })
 
-    EventHandler.on(this._element, EVENT_MOUSEDOWN_DISMISS, event => {
+    EventHandler.on(this._element, EVENT_MOUSEDOWN_DISMISS, (event) => {
       // a bad trick to segregate clicks that may start inside dialog but end outside, and avoid listen to scrollbar clicks
-      EventHandler.one(this._element, EVENT_CLICK_DISMISS, event2 => {
+      EventHandler.one(this._element, EVENT_CLICK_DISMISS, (event2) => {
         if (this._element !== event.target || this._element !== event2.target) {
           return
         }
 
-        if (this._config.backdrop === 'static') {
+        if (this._config.backdrop === "static") {
           this._triggerBackdropTransition()
           return
         }
@@ -243,10 +245,10 @@ class Modal extends BaseComponent {
   }
 
   _hideModal() {
-    this._element.style.display = 'none'
-    this._element.setAttribute('aria-hidden', true)
-    this._element.removeAttribute('aria-modal')
-    this._element.removeAttribute('role')
+    this._element.style.display = "none"
+    this._element.setAttribute("aria-hidden", true)
+    this._element.removeAttribute("aria-modal")
+    this._element.removeAttribute("role")
     this._isTransitioning = false
 
     this._backdrop.hide(() => {
@@ -267,15 +269,19 @@ class Modal extends BaseComponent {
       return
     }
 
-    const isModalOverflowing = this._element.scrollHeight > document.documentElement.clientHeight
+    const isModalOverflowing =
+      this._element.scrollHeight > document.documentElement.clientHeight
     const initialOverflowY = this._element.style.overflowY
     // return if the following background transition hasn't yet completed
-    if (initialOverflowY === 'hidden' || this._element.classList.contains(CLASS_NAME_STATIC)) {
+    if (
+      initialOverflowY === "hidden" ||
+      this._element.classList.contains(CLASS_NAME_STATIC)
+    ) {
       return
     }
 
     if (!isModalOverflowing) {
-      this._element.style.overflowY = 'hidden'
+      this._element.style.overflowY = "hidden"
     }
 
     this._element.classList.add(CLASS_NAME_STATIC)
@@ -294,24 +300,25 @@ class Modal extends BaseComponent {
    */
 
   _adjustDialog() {
-    const isModalOverflowing = this._element.scrollHeight > document.documentElement.clientHeight
+    const isModalOverflowing =
+      this._element.scrollHeight > document.documentElement.clientHeight
     const scrollbarWidth = this._scrollBar.getWidth()
     const isBodyOverflowing = scrollbarWidth > 0
 
     if (isBodyOverflowing && !isModalOverflowing) {
-      const property = isRTL() ? 'paddingLeft' : 'paddingRight'
+      const property = isRTL() ? "paddingLeft" : "paddingRight"
       this._element.style[property] = `${scrollbarWidth}px`
     }
 
     if (!isBodyOverflowing && isModalOverflowing) {
-      const property = isRTL() ? 'paddingRight' : 'paddingLeft'
+      const property = isRTL() ? "paddingRight" : "paddingLeft"
       this._element.style[property] = `${scrollbarWidth}px`
     }
   }
 
   _resetAdjustments() {
-    this._element.style.paddingLeft = ''
-    this._element.style.paddingRight = ''
+    this._element.style.paddingLeft = ""
+    this._element.style.paddingRight = ""
   }
 
   // Static
@@ -319,11 +326,11 @@ class Modal extends BaseComponent {
     return this.each(function () {
       const data = Modal.getOrCreateInstance(this, config)
 
-      if (typeof config !== 'string') {
+      if (typeof config !== "string") {
         return
       }
 
-      if (typeof data[config] === 'undefined') {
+      if (typeof data[config] === "undefined") {
         throw new TypeError(`No method named "${config}"`)
       }
 
@@ -335,37 +342,45 @@ class Modal extends BaseComponent {
 /**
  * Data API implementation
  */
+import { BROWSER } from "esm-env"
 
-EventHandler.on(document, EVENT_CLICK_DATA_API, SELECTOR_DATA_TOGGLE, function (event) {
-  const target = SelectorEngine.getElementFromSelector(this)
+if (BROWSER) {
+  EventHandler.on(
+    document,
+    EVENT_CLICK_DATA_API,
+    SELECTOR_DATA_TOGGLE,
+    function (event) {
+      const target = SelectorEngine.getElementFromSelector(this)
 
-  if (['A', 'AREA'].includes(this.tagName)) {
-    event.preventDefault()
-  }
-
-  EventHandler.one(target, EVENT_SHOW, showEvent => {
-    if (showEvent.defaultPrevented) {
-      // only register focus restorer if modal will actually get shown
-      return
-    }
-
-    EventHandler.one(target, EVENT_HIDDEN, () => {
-      if (isVisible(this)) {
-        this.focus()
+      if (["A", "AREA"].includes(this.tagName)) {
+        event.preventDefault()
       }
-    })
-  })
 
-  // avoid conflict when clicking modal toggler while another one is open
-  const alreadyOpen = SelectorEngine.findOne(OPEN_SELECTOR)
-  if (alreadyOpen) {
-    Modal.getInstance(alreadyOpen).hide()
-  }
+      EventHandler.one(target, EVENT_SHOW, (showEvent) => {
+        if (showEvent.defaultPrevented) {
+          // only register focus restorer if modal will actually get shown
+          return
+        }
 
-  const data = Modal.getOrCreateInstance(target)
+        EventHandler.one(target, EVENT_HIDDEN, () => {
+          if (isVisible(this)) {
+            this.focus()
+          }
+        })
+      })
 
-  data.toggle(this)
-})
+      // avoid conflict when clicking modal toggler while another one is open
+      const alreadyOpen = SelectorEngine.findOne(OPEN_SELECTOR)
+      if (alreadyOpen) {
+        Modal.getInstance(alreadyOpen).hide()
+      }
+
+      const data = Modal.getOrCreateInstance(target)
+
+      data.toggle(this)
+    }
+  )
+}
 
 enableDismissTrigger(Modal)
 
