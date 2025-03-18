@@ -3,7 +3,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "version": "5.3.6",
+  "version": "5.3.7",
   "type": "module",
   "module": "./js/index.esm.js",
   "types": "./js/index.d.ts",
