@@ -11,7 +11,8 @@
     ".": {
       "import": "./js/index.esm.js",
       "types": "./js/index.d.ts"
-    }
+    },
+    "./scss/": "./scss/"
   },
   "peerDependencies": {
     "@popperjs/core": "^2.11.8"
